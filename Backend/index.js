@@ -1,5 +1,6 @@
 
 const express = require("express");
+const cors = require("cors");
 const mongoose = require("mongoose");
 const dns = require("dns");
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
@@ -13,7 +14,10 @@ const docsRoutes = require("./routes/docsRoutes");
 console.log(process.env.MONGO_URI);
 
 const app = express();
+app.use(cors());
 app.use(express.json());
+
+app.use("/uploads", express.static("uploads"));
 
 
 mongoose
@@ -38,5 +42,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(5000, () => {
-  console.log("Server is running on port 5000");
+  console.log("IPSITA NEW SERVER STARTED");
 });

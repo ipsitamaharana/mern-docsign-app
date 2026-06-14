@@ -3,6 +3,8 @@ const router = express.Router();
 
 const upload = require("../middleware/uploadMiddleware");
 const File = require("../models/File");
+
+// Upload PDF
 router.post(
     "/upload",
     upload.single("pdf"),
@@ -21,4 +23,14 @@ router.post(
 
     }
 );
+
+// Get all uploaded documents
+router.get("/", async (req, res) => {
+
+    const files = await File.find();
+
+    res.status(200).json(files);
+
+});
+
 module.exports = router;
