@@ -13,6 +13,7 @@ function App() {
   const [files, setFiles] = useState([]);
   const [selectedPdf, setSelectedPdf] = useState(null);
   const [selectedFileId, setSelectedFileId] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   const [signaturePosition, setSignaturePosition] = useState({
     x: 480,
@@ -52,6 +53,37 @@ function App() {
     });
   };
 
+  const uploadPdf = async () => {
+  if (!selectedFile) {
+    alert("Please select a PDF first");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("pdf", selectedFile);
+
+  try {
+    const response = await fetch(
+      "http://localhost:5000/api/upload",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await response.json();
+
+    alert("PDF uploaded successfully!");
+
+    console.log(data);
+
+    window.location.reload();
+  } catch (error) {
+    console.error(error);
+    alert("Upload failed");
+  }
+};
+
   const saveSignature = async () => {
     try {
       const response = await fetch(
@@ -88,6 +120,22 @@ function App() {
       <h1 className="text-4xl font-bold text-center mb-8">
         Document Dashboard
       </h1>
+
+      <div className="max-w-3xl mx-auto mb-6 bg-white p-4 rounded-lg shadow">
+  <input
+    type="file"
+    accept=".pdf"
+    onChange={(e) => setSelectedFile(e.target.files[0])}
+    className="mb-4"
+  />
+
+  <button
+    onClick={uploadPdf}
+    className="bg-green-600 text-white px-4 py-2 rounded"
+  >
+    Upload PDF
+  </button>
+</div>
 
       <div className="max-w-3xl mx-auto">
         {files.map((file) => (
