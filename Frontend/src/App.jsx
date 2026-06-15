@@ -11,6 +11,10 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 function App() {
   const [files, setFiles] = useState([]);
   const [selectedPdf, setSelectedPdf] = useState(null);
+  const [signaturePosition, setSignaturePosition] = useState({
+  x: 480,
+  y: 715,
+});
 
   useEffect(() => {
     fetch("http://localhost:5000/api/docs")
@@ -61,12 +65,24 @@ function App() {
             PDF Preview
           </h2>
 
-          <Document
-            file={selectedPdf}
-            onLoadError={(error) => console.log(error)}
-          >
-            <Page pageNumber={1} />
-          </Document>
+        <div className="relative inline-block">
+  <Document
+    file={selectedPdf}
+    onLoadError={(error) => console.log(error)}
+  >
+    <Page pageNumber={1} />
+  </Document>
+
+  <div
+    className="absolute bg-yellow-300 border-2 border-black px-3 py-1 font-bold"
+    style={{
+      left: `${signaturePosition.x}px`,
+      top: `${signaturePosition.y}px`,
+    }}
+  >
+    SIGN HERE
+  </div>
+</div>
         </div>
       )}
     </div>

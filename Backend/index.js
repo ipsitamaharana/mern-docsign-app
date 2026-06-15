@@ -11,6 +11,7 @@ const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const docsRoutes = require("./routes/docsRoutes");
+const signatureRoutes = require("./routes/signatureRoutes");
 console.log(process.env.MONGO_URI);
 
 const app = express();
@@ -36,6 +37,7 @@ mongoose
   app.use("/api/user", userRoutes);
   app.use("/api/upload", uploadRoutes);
   app.use("/api/docs", docsRoutes);
+  app.use("/api/signatures", signatureRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello Ipsita! Backend is working 🚀");
