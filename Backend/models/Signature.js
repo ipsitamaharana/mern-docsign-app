@@ -33,11 +33,16 @@ token: {
   default: "",
 },
 
-  status: {
-    type: String,
-    enum: ["pending", "signed"],
-    default: "pending",
-  },
+ status: {
+  type: String,
+  enum: ["pending", "signed", "rejected"],
+  default: "pending",
+},
+
+rejectionReason: {
+  type: String,
+  default: "",
+},
 });
 
 module.exports = mongoose.model("Signature", signatureSchema);

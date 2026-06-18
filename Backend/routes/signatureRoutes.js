@@ -134,4 +134,65 @@ res.status(200).json({
   }
 });
 
+// SIGN DOCUMENT
+router.post("/sign/:token", async (req, res) => {
+  try {
+    const signature = await Signature.findOne({
+      token: req.params.token,
+    });
+
+    if (!signature) {
+      return res.status(404).json({
+        message: "Invalid token",
+      });
+    }
+
+    signature.status = "signed";
+    signature.rejectionReason = "";
+
+    await signature.save();
+
+    res.status(200).json({
+      message: "Document signed successfully",
+      signature,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+});
+
+
+// REJECT DOCUMENT
+router.post("/reject/:token", async (req, res) => {
+  try {
+    const { reason } = req.body;
+
+    const signature = await Signature.findOne({
+      token: req.params.token,
+    });
+
+    if (!signature) {
+      return res.status(404).json({
+        message: "Invalid token",
+      });
+    }
+
+    signature.status = "rejected";
+    signature.rejectionReason = reason;
+
+    await signature.save();
+
+    res.status(200).json({
+      message: "Document rejected successfully",
+      signature,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+});
+
 module.exports = router;
