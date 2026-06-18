@@ -3,6 +3,7 @@ const router = express.Router();
 
 const upload = require("../middleware/uploadMiddleware");
 const File = require("../models/File");
+const Signature = require("../models/Signature");
 
 // Upload PDF
 router.post(
@@ -26,11 +27,30 @@ router.post(
 
 // Get all uploaded documents
 router.get("/", async (req, res) => {
-
+  try {
     const files = await File.find();
 
-    res.status(200).json(files);
+    const filesWithStatus = await Promise.all(
+      files.map(async (file) => {
+        const signature = await Signature.findOne({
+          fileId: file._id,
+        });
 
+        return {
+          ...file.toObject(),
+          status: signature
+            ? signature.status
+            : "pending",
+        };
+      })
+    );
+
+    res.status(200).json(filesWithStatus);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
 });
 
 module.exports = router;

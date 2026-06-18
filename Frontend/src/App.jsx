@@ -14,7 +14,7 @@ function App() {
   const [selectedPdf, setSelectedPdf] = useState(null);
   const [selectedFileId, setSelectedFileId] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
-
+  const [statusFilter, setStatusFilter] = useState("all");
   const [signaturePosition, setSignaturePosition] = useState({
     x: 480,
     y: 715,
@@ -116,10 +116,22 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-10">
+       <div className="min-h-screen bg-gray-100 p-4 md:p-8 lg:p-10">
       <h1 className="text-4xl font-bold text-center mb-8">
         Document Dashboard
       </h1>
+      <div className="max-w-3xl mx-auto mb-6">
+  <select
+    value={statusFilter}
+    onChange={(e) => setStatusFilter(e.target.value)}
+    className="border p-2 rounded"
+  >
+    <option value="all">All Documents</option>
+    <option value="pending">Pending</option>
+    <option value="signed">Signed</option>
+    <option value="rejected">Rejected</option>
+  </select>
+</div>
 
       <div className="max-w-3xl mx-auto mb-6 bg-white p-4 rounded-lg shadow">
   <input
@@ -137,15 +149,41 @@ function App() {
   </button>
 </div>
 
-      <div className="max-w-3xl mx-auto">
-        {files.map((file) => (
-          <div
-            key={file._id}
-            className="bg-white p-4 rounded-lg shadow mb-4 flex justify-between items-center"
-          >
-            <div>📄 {file.filename}</div>
+      <div className="max-w-5xl mx-auto">
+        {files
+  .filter((file) => {
+    if (statusFilter === "all") {
+      return true;
+    }
 
-            <div className="flex gap-4 items-center">
+    return file.status === statusFilter;
+  })
+  .map((file) => (
+          <div
+  key={file._id}
+  className="bg-white p-4 rounded-lg shadow mb-4 flex flex-col md:flex-row md:justify-between md:items-center gap-4"
+>
+            <div>
+  <div className="font-medium break-all">
+    📄 {file.filename}
+  </div>
+
+  <div className="mt-2">
+    <span
+      className={`px-2 py-1 rounded text-sm text-white ${
+        file.status === "signed"
+          ? "bg-green-600"
+          : file.status === "rejected"
+          ? "bg-red-600"
+          : "bg-yellow-500"
+      }`}
+    >
+      {file.status}
+    </span>
+  </div>
+</div>
+
+           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
               <span>{(file.size / 1024).toFixed(2)} KB</span>
 
               <button
