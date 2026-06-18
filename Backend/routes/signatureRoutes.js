@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const crypto = require("crypto");
+const sendEmail = require("../utils/sendEmail");
 
 const fs = require("fs");
 const path = require("path");
@@ -85,6 +87,44 @@ router.post("/generate/:fileId", async (req, res) => {
       file: signedPath,
     });
 
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+});
+router.post("/share/:fileId", async (req, res) => {
+  try {
+    const { signerEmail } = req.body;
+
+    const token = crypto.randomBytes(16).toString("hex");
+
+    const signature = await Signature.findOneAndUpdate(
+      { fileId: req.params.fileId },
+      {
+        signerEmail,
+        token,
+      },
+      { new: true }
+    );
+
+    if (!signature) {
+      return res.status(404).json({
+        message: "Signature not found",
+      });
+    }
+
+   const signingLink = `http://localhost:5173/sign/${token}`;
+
+await sendEmail(
+  signerEmail,
+  signingLink
+);
+
+res.status(200).json({
+  message: "Email sent successfully",
+  signingLink,
+});
   } catch (error) {
     res.status(500).json({
       message: error.message,

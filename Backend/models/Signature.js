@@ -23,6 +23,15 @@ const signatureSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  signerEmail: {
+  type: String,
+  default: "",
+},
+
+token: {
+  type: String,
+  default: "",
+},
 
   status: {
     type: String,
