@@ -13,7 +13,7 @@ const uploadRoutes = require("./routes/uploadRoutes");
 const docsRoutes = require("./routes/docsRoutes");
 const signatureRoutes = require("./routes/signatureRoutes");
 const auditRoutes = require("./routes/auditRoutes");
-console.log(process.env.MONGO_URI);
+
 
 const app = express();
 app.use(cors());
@@ -40,11 +40,13 @@ mongoose
   app.use("/api/docs", docsRoutes);
   app.use("/api/signatures", signatureRoutes);
   app.use("/api/audit", auditRoutes);
-  
+
 app.get("/", (req, res) => {
   res.send("Hello Ipsita! Backend is working 🚀");
 });
 
-app.listen(5000, () => {
-  console.log("IPSITA NEW SERVER STARTED");
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
