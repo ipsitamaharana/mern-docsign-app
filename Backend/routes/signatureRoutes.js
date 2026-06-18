@@ -9,8 +9,10 @@ const { PDFDocument, rgb } = require("pdf-lib");
 
 const Signature = require("../models/Signature");
 const File = require("../models/File");
+const auditMiddleware = require("../middleware/auditMiddleware");
 
-router.post("/", async (req, res) => {
+
+router.post("/", auditMiddleware, async (req, res) => {
   try {
     const { fileId, coordinates, signer } = req.body;
 
