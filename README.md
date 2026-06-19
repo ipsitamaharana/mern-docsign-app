@@ -71,7 +71,7 @@ MongoDB hosted on MongoDB Atlas.
 
 ## Author
 
-Name: Ipsita Maharana
-University: Odisha University of Technology and Research
-Branch: Civil Engineering 
-Internship Project
+Name: Ipsita Maharana,
+University: Odisha University of Technology and Research,
+Branch: Civil Engineering, 
+Internship Project,
