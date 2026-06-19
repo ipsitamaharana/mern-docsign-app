@@ -66,29 +66,18 @@ router.post("/generate/:fileId", async (req, res) => {
 
     const signedPdfBytes = await pdfDoc.save();
 
-    const signedDir = "uploads/signed";
 
-    if (!fs.existsSync(signedDir)) {
-      fs.mkdirSync(signedDir, { recursive: true });
-    }
+res.setHeader(
+  "Content-Type",
+  "application/pdf"
+);
 
-    const signedFileName = `signed-${file.filename}`;
+res.setHeader(
+  "Content-Disposition",
+  `attachment; filename=signed-${file.filename}`
+);
 
-    const signedPath = path.join(
-      signedDir,
-      signedFileName
-    );
-
-    fs.writeFileSync(
-      signedPath,
-      signedPdfBytes
-    );
-
-    res.status(200).json({
-      message: "Signed PDF generated successfully",
-      file: signedPath,
-    });
-
+res.send(Buffer.from(signedPdfBytes));
   } catch (error) {
     res.status(500).json({
       message: error.message,

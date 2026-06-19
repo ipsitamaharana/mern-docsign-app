@@ -16,9 +16,11 @@ function App() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [statusFilter, setStatusFilter] = useState("all");
   const [signaturePosition, setSignaturePosition] = useState({
+  
     x: 480,
     y: 715,
   });
+  
 
   const [isDragging, setIsDragging] = useState(false);
   const pdfContainerRef = useRef(null);
@@ -84,36 +86,58 @@ function App() {
   }
 };
 
-  const saveSignature = async () => {
-    try {
-      const response = await fetch(
-        "https://mern-docsign-app.onrender.com/api/signatures",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+ const saveSignature = async () => {
+  try {
+    const response = await fetch(
+      "https://mern-docsign-app.onrender.com/api/signatures",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fileId: selectedFileId,
+          coordinates: {
+            x: signaturePosition.x,
+            y: signaturePosition.y,
           },
-          body: JSON.stringify({
-            fileId: selectedFileId,
-            coordinates: {
-              x: signaturePosition.x,
-              y: signaturePosition.y,
-            },
-            signer: "Ipsita",
-          }),
-        }
-      );
+          signer: "Ipsita",
+        }),
+      }
+    );
 
-      const data = await response.json();
+    const data = await response.json();
 
-      console.log("Signature Saved:", data);
+    console.log("Signature Saved:", data);
 
-      alert("Signature coordinates saved successfully!");
-    } catch (error) {
-      console.error(error);
-      alert("Failed to save signature");
-    }
-  };
+    const generateResponse = await fetch(
+      `https://mern-docsign-app.onrender.com/api/signatures/generate/${selectedFileId}`,
+      {
+        method: "POST",
+      }
+    );
+
+    const blob = await generateResponse.blob();
+
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "signed-document.pdf";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+    alert("Signed PDF generated successfully!");
+  } catch (error) {
+    console.error(error);
+    alert("Failed to save signature");
+  }
+};
 
   return (
        <div className="min-h-screen bg-gray-100 p-4 md:p-8 lg:p-10">
@@ -183,8 +207,9 @@ function App() {
   </div>
 </div>
 
-           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-              <span>{(file.size / 1024).toFixed(2)} KB</span>
+           
+              <div className="flex flex-col sm:flex-row gap-4 items-center ml-auto">
+  <span>{(file.size / 1024).toFixed(2)} KB</span>
 
               <button
                 onClick={() => {
@@ -244,6 +269,7 @@ function App() {
           </button>
         </div>
       )}
+      
     </div>
   );
 }
