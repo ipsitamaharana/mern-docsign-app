@@ -24,7 +24,7 @@ function App() {
   const pdfContainerRef = useRef(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/docs")
+   fetch("https://mern-docsign-app.onrender.com/api/docs")
       .then((res) => res.json())
       .then((data) => {
         setFiles(data);
@@ -64,7 +64,7 @@ function App() {
 
   try {
     const response = await fetch(
-      "http://localhost:5000/api/upload",
+      "https://mern-docsign-app.onrender.com/api/upload",
       {
         method: "POST",
         body: formData,
@@ -87,7 +87,7 @@ function App() {
   const saveSignature = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/signatures",
+        "https://mern-docsign-app.onrender.com/api/signatures",
         {
           method: "POST",
           headers: {
@@ -189,7 +189,7 @@ function App() {
               <button
                 onClick={() => {
                   setSelectedPdf(
-                    `http://localhost:5000/uploads/${file.filename}`
+                    `https://mern-docsign-app.onrender.com/uploads/${file.filename}`
                   );
 
                   setSelectedFileId(file._id);
