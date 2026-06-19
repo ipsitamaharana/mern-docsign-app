@@ -72,6 +72,6 @@ MongoDB hosted on MongoDB Atlas.
 ## Author
 
 Ipsita Maharana
-Civil Engineering (Honours)
+Civil Engineering 
 Odisha University of Technology and Research
 Internship Project
